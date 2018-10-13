@@ -1,26 +1,34 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import Layout from "./UI/Layout";
+import Field from "./UI/Field";
+import Button from "./UI/Button";
+import ContollPanel from "./UI/ControllPanel";
+import Score from "./UI/Score";
+import { initCells } from "./Logic";
 
 class App extends Component {
+  state = this.getNewState();
+
+  getNewState() {
+    return {
+      cells: initCells(),
+      score: 0
+    };
+  }
+
+  newGame = () => {
+    this.setState(this.getNewState());
+  };
   render() {
+    const { cells, score } = this.state;
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
+      <Layout>
+        <ContollPanel>
+          <Button onClick={this.newGame}>New Game</Button>
+          <Score>{score}</Score>
+        </ContollPanel>
+        <Field cells={cells} />
+      </Layout>
     );
   }
 }
