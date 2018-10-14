@@ -4,10 +4,17 @@ import Field from "./UI/Field";
 import Button from "./UI/Button";
 import ContollPanel from "./UI/ControllPanel";
 import Score from "./UI/Score";
-import { initCells } from "./Logic";
+import { initCells, moveCells, directions } from "./Logic";
 
 class App extends Component {
   state = this.getNewState();
+
+  mapKeyCodeToDirection = {
+    52: directions.LEFT,
+    50: directions.DOWN,
+    54: directions.RIGHT,
+    56: directions.UP
+  };
 
   getNewState() {
     return {
@@ -19,6 +26,24 @@ class App extends Component {
   newGame = () => {
     this.setState(this.getNewState());
   };
+
+  componentDidMount() {
+    document.addEventListener("keypress", this.handleKeyPress);
+  }
+
+  componentWillMount() {
+    document.removeEventListener("keypress", this.handleKeyPress);
+  }
+
+  handleKeyPress = event => {
+    console.log(event.keyCode);
+    if ([52, 50, 54, 56].includes(event.keyCode))
+      this.setState(state => ({
+        ...state,
+        cells: moveCells(state.cells, this.mapKeyCodeToDirection[event.keyCode])
+      }));
+  };
+
   render() {
     const { cells, score } = this.state;
     return (
